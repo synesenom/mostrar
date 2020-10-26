@@ -173,8 +173,8 @@ describe('Scene', () => {
 
             assert.deepEqual(scene.__test__._.current, 0)
             assert.deepEqual(
-                scene.__test__._.objects.map(obj => obj.__test__._.states.map(d => d.GET())),
-                objects.map(obj => obj.__test__._.states.map(d => d.GET()))
+                scene.__test__._.objects.map(obj => obj.__test__._.states),
+                objects.map(obj => obj.__test__._.states)
             )
             return assert_frame_0(scene)
         })

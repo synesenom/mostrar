@@ -1,6 +1,5 @@
 import { select, max } from 'd3'
 import extractSelectors from './utils/extract-selectors'
-import State from './state'
 
 // TODO Separate frames manipulation methods in a FrameCollection class.
 // TODO Separate frame manipulation methods in a Frame class.
@@ -184,14 +183,14 @@ export default function (node) {
         const entries = getTransitions(frames)
         const currentStyle = initProperties(getStyle(entries), 'style')
         const currentAttr = initProperties(getAttributes(entries), 'attr')
-        _.states.push(State({
+        _.states.push({
             id: 0,
             visible,
             duration: 0,
             delay: 0,
             style: Object.assign({}, currentStyle),
             attr: Object.assign({}, currentAttr)
-        }))
+        })
 
         // Build historical frame setStyle.
         frames.forEach(frame => {
@@ -212,14 +211,14 @@ export default function (node) {
             }
 
             // Add state for frame.
-            _.states.push(State({
+            _.states.push({
                 id: frame.id,
                 visible,
                 duration: getMaxDuration(entries),
                 delay: getMaxDelay(entries),
                 style: Object.assign({}, currentStyle),
                 attr: Object.assign({}, currentAttr)
-            }))
+            })
         })
 
         return api
@@ -227,32 +226,32 @@ export default function (node) {
 
     api.toFrame = (before, after) => {
         // Determine transition type (if any), duration and delay.
-        const type = determineTransition(_.states[before].GET().visible, _.states[after].GET().visible)
-        const duration = _.states[after].GET().duration || _.states[before].GET().duration
-        const delay = _.states[after].GET().delay || _.states[before].GET().delay
+        const type = determineTransition(_.states[before].visible, _.states[after].visible)
+        const duration = _.states[after].duration || _.states[before].duration
+        const delay = _.states[after].delay || _.states[before].delay
 
         switch (type) {
             case TRANSITION_TYPES.enter: {
-                const s = setStyle(_.selection, _.states[before].GET().style)
+                const s = setStyle(_.selection, _.states[before].style)
                     .style('display', null)
                 const t = s.interrupt().transition().duration(duration).delay(delay)
-                setStyle(t, _.states[after].GET().style)
-                setAttributes(t, _.states[after].GET().attr)
+                setStyle(t, _.states[after].style)
+                setAttributes(t, _.states[after].attr)
                 break
             }
 
             default:
             case TRANSITION_TYPES.update: {
                 const t = typeof type === 'undefined' ? _.selection : _.selection.interrupt().transition().duration(duration).delay(delay)
-                setStyle(t, computeStyleDiff(_.states[before].GET().style, _.states[after].GET().style))
-                setAttributes(t, computeAttributeDiff(_.states[before].GET().attr, _.states[after].GET().attr))
+                setStyle(t, computeStyleDiff(_.states[before].style, _.states[after].style))
+                setAttributes(t, computeAttributeDiff(_.states[before].attr, _.states[after].attr))
                 break
             }
 
             case TRANSITION_TYPES.exit: {
                 const t = _.selection.interrupt().transition().duration(duration).delay(delay)
-                setStyle(t, _.states[after].GET().style)
-                setAttributes(t, _.states[after].GET().attr)
+                setStyle(t, _.states[after].style)
+                setAttributes(t, _.states[after].attr)
                 t.on('end', () => _.selection.style('display', 'none'))
                 break
             }

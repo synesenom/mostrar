@@ -493,7 +493,7 @@ describe('SceneObject', () => {
             addObjects()
             const obj = new SceneObject(document.getElementById('obj-1'))
             obj.init(FRAMES)
-            assert.deepEqual(obj.__test__._.states.map(d => d.GET()), [{
+            assert.deepEqual(obj.__test__._.states, [{
                 id: 0,
                 visible: true,
                 duration: 0,
@@ -545,7 +545,7 @@ describe('SceneObject', () => {
             const obj = new SceneObject(document.getElementById('obj-1'))
             obj.init(FRAMES)
             obj.toFrame(0, 1)
-            assert.deepEqual(obj.__test__._.states[1].GET().style, {
+            assert.deepEqual(obj.__test__._.states[1].style, {
                 color: 'red',
                 'background-color': 'orange'
             })
