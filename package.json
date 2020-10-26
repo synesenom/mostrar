@@ -1,0 +1,69 @@
+{
+  "name": "mostrar",
+  "version": "0.0.1",
+  "author": {
+    "name": "Enys Mones",
+    "email": "enys.mones@gmail.com",
+    "url": "enysmones.com"
+  },
+  "description": "Lightweight library to build interactive presentations in HTML",
+  "homepage": "https://github.com/synesenom/mostrar",
+  "main": "dist/mostrar.min.js",
+  "module": "src/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "d3": "^6.2.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-istanbul": "^3.0.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-polyfill": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "chai": "^4.2.0",
+    "coveralls": "^3.1.0",
+    "cross-env": "^7.0.2",
+    "istanbul": "^0.4.5",
+    "jsdom": "^16.4.0",
+    "mocha": "^8.0.1",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nodemon": "^2.0.6",
+    "nyc": "^15.1.0",
+    "reload": "^3.1.1",
+    "rollup": "^2.32.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-strip-code": "^0.2.7"
+  },
+  "scripts": {
+    "coverage": "cross-env NODE_ENV=test nyc --reporter=text --reporter=html _mocha --recursive --require babel-core/register",
+    "test": "./node_modules/.bin/mocha --recursive --require babel-core/register",
+    "reload": "./node_modules/.bin/reload --dir demo --watch-dir demo --port 8081",
+    "build": "./node_modules/.bin/rollup -c; cp dist/mostrar.min.js demo/js/lib",
+    "debug": "npm run-script reload & ./node_modules/.bin/nodemon --watch src --watch test --exec 'npm run-script coverage & npm run-script build'"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "env": {
+      "test": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
+  "nyc": {
+    "exclude": [
+      "test"
+    ],
+    "include": [
+      "src/**/*.js"
+    ],
+    "sourceMap": false,
+    "instrument": false,
+    "require": [
+      "babel-register"
+    ]
+  }
+}

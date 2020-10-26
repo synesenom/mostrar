@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/lib/d3.6.2.0.min.js"></script>
+    <script src="js/lib/mostrar.min.js"></script>
+    <script src="js/frames.js"></script>
+    <title>demo</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat-Light', sans-serif;
+        }
+
+        #cards-container {
+            width: calc(100% - 30px);
+            display: grid;
+            padding: 15px;
+            grid-template-columns: 100%;
+            grid-column-gap: 36px;
+            grid-row-gap: 36px;
+        }
+
+        @media screen and (min-width: 600px) {
+            #cards-container {
+                grid-template-columns: repeat(2, calc(50% - 18px));
+            }
+        }
+
+        @media screen and (min-width: 800px) {
+            #cards-container {
+                grid-template-columns: repeat(3, calc(33.33% - 24px));
+            }
+        }
+
+        .card {
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            box-shadow: 0 0 10px #ddd;
+        }
+
+        .card .title {
+            width: 100%;
+            font-variant: all-small-caps;
+            font-size: 1.2em;
+            margin-bottom: 1em;
+        }
+
+        svg {
+            width: 100%;
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+<div id="cards-container">
+    <div class="card">
+        <div class="title">Simple update</div>
+        <svg class="widget">
+            <circle class="obj" id="update-single-1" cx="50%" cy="50%" r="10" style="fill:yellowgreen"></circle>
+        </svg>
+    </div>
+
+    <div class="card">
+        <div class="title">Multiple selections</div>
+        <svg class="widget">
+            <circle class="obj" id="update-multiple-1" cx="33.33%" cy="50%" r="10" style="fill:yellowgreen"></circle>
+            <circle class="obj" id="update-multiple-2" cx="66.67%" cy="50%" r="30" style="fill:yellowgreen"></circle>
+        </svg>
+    </div>
+
+    <div class="card">
+        <div class="title">Update with delay</div>
+        <svg class="widget">
+            <rect class="obj" id="update-delay-1" x="20%" y="20%" width="1%" height="15%" style="fill:yellowgreen"></rect>
+            <rect class="obj" id="update-delay-2" x="20%" y="40%" width="1%" height="15%" style="fill:yellowgreen"></rect>
+            <rect class="obj" id="update-delay-3" x="20%" y="60%" width="1%" height="15%" style="fill:yellowgreen"></rect>
+        </svg>
+    </div>
+
+    <div class="card">
+        <div class="title">Simple enter</div>
+        <svg class="widget">
+            <circle class="obj" id="enter-single-1" cx="50%" cy="50%" r="30" fill="royalblue" style="display:none;opacity:0"></circle>
+        </svg>
+    </div>
+
+    <div class="card">
+        <div class="title">Multiple enter</div>
+        <svg class="widget">
+            <circle class="obj" id="enter-multiple-1" cx="33.33%" cy="50%" r="30" fill="royalblue" style="display:none;opacity:0"></circle>
+            <circle class="obj" id="enter-multiple-2" cx="66.67%" cy="50%" r="30" fill="royalblue" style="display:none;opacity:0"></circle>
+        </svg>
+    </div>
+
+    <div class="card">
+        <div class="title">Enter with delay</div>
+        <svg class="widget">
+            <rect class="obj" id="enter-delay-1" x="20%" y="20%" width="60%" height="15%" fill="royalblue" style="display:none;opacity:0"></rect>
+            <rect class="obj" id="enter-delay-2" x="20%" y="40%" width="60%" height="15%" fill="royalblue" style="display:none;opacity:0"></rect>
+            <rect class="obj" id="enter-delay-3" x="20%" y="60%" width="60%" height="15%" fill="royalblue" style="display:none;opacity:0"></rect>
+        </svg>
+    </div>
+
+    <div class="card">
+        <div class="title">Simple exit</div>
+        <svg class="widget">
+            <circle class="obj" id="exit-single-1" cx="50%" cy="50%" r="30" fill="goldenrod"></circle>
+        </svg>
+    </div>
+
+    <div class="card">
+        <div class="title">Multiple exits</div>
+        <svg class="widget">
+            <circle class="obj" id="exit-multiple-1" cx="33.33%" cy="50%" r="30" fill="goldenrod" ></circle>
+            <circle class="obj" id="exit-multiple-2" cx="66.67%" cy="50%" r="30" fill="goldenrod"></circle>
+        </svg>
+    </div>
+
+    <div class="card">
+        <div class="title">Exit with delay</div>
+        <svg class="widget">
+            <rect class="obj" id="exit-delay-1" x="20%" y="20%" width="60%" height="15%" fill="goldenrod"></rect>
+            <rect class="obj" id="exit-delay-2" x="20%" y="40%" width="60%" height="15%" fill="goldenrod"></rect>
+            <rect class="obj" id="exit-delay-3" x="20%" y="60%" width="60%" height="15%" fill="goldenrod"></rect>
+        </svg>
+    </div>
+</div>
+</body>
+<script>
+    let i = 0
+    const scene = mostrar.Scene('#cards-container')
+        .init(Frames)
+    setInterval(() => {
+        if (i < Frames.length) {
+            scene.forward()
+            i++
+        } else {
+            scene.jumpTo(1)
+            i = 1
+        }
+    }, 900)
+</script>
+</html>
