@@ -5,7 +5,7 @@ import SceneObject from './scene-object'
 // TODO Instead of a single transition, add support to a sequence of style/attr transitions.
 
 // TODO Lump transitions with same delay and duration together.
-export default function (selector) {
+export default function Scene (selector) {
     let _ = {
         frames: [],
 
