@@ -1,6 +1,6 @@
 import * as meta from './package.json'
 import { terser } from 'rollup-plugin-terser'
-import stripCode from "rollup-plugin-strip-code"
+import stripCode from 'rollup-plugin-strip-code'
 
 const copyright = `// ${meta.homepage} v${meta.version} Copyright ${(new Date).getFullYear()} ${meta.author.name}`
 const dependencies = {
