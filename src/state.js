@@ -5,7 +5,6 @@ import Attributes from './attributes'
 
 export default function State (state) {
     const _ = {
-        id: state.id,
         visible: state.visible,
         duration: state.duration || 0,
         delay: state.delay || 0,
@@ -19,7 +18,6 @@ export default function State (state) {
     api.__test__ = {
         toString () {
             return stringify({
-                id: _.id,
                 visible: _.visible,
                 duration: _.duration,
                 delay: _.delay,

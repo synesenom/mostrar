@@ -51,7 +51,12 @@ export default function Scene (selector) {
     }
 
     api.init = frames => {
-        _.frames = frames
+        // Add indices to frames.
+        _.frames = frames.map((d, index) => Object.assign(d, {
+            index
+        }))
+
+        // Build scene.
         _.objects = select(selector).selectAll('.obj')
             .nodes()
             .map(d => SceneObject(d).init(_.frames))

@@ -31,7 +31,6 @@ describe('State', () => {
     describe('.toString()', () => {
         it('should return the string representation of the state', () => {
             assert.equal(State({
-                id: 0,
                 visible: true,
                 style: {
                     fill: 'red'
@@ -40,7 +39,6 @@ describe('State', () => {
                     stroke: 'blue'
                 }
             }).__test__.toString(), stringify({
-                id: 0,
                 delay: 0,
                 duration: 0,
                 visible: true,

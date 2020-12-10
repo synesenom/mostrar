@@ -1,13 +1,11 @@
 const duration = 700
 
 const Frames = [{
-    id: 0,
     update: [{
         selector: ['.obj'],
         duration
     }]
 }, {
-    id: 1,
     update: [{
         selector: ['#update-single-1'],
         duration,
@@ -19,7 +17,6 @@ const Frames = [{
         }
     }]
 }, {
-    id: 2,
     update: [{
         selector: ['#update-multiple-1'],
         duration: duration / 2,
@@ -40,7 +37,6 @@ const Frames = [{
         }
     }]
 }, {
-    id: 3,
     update: [{
         selector: ['#update-delay-1'],
         duration: 0.6 * duration,
@@ -72,7 +68,6 @@ const Frames = [{
         }
     }]
 }, {
-    id: 4,
     enter: [{
         selector: ['#enter-single-1'],
         duration,
@@ -81,7 +76,6 @@ const Frames = [{
         }
     }]
 }, {
-    id: 5,
     enter: [{
         selector: ['#enter-multiple-1'],
         duration: duration / 2,
@@ -96,7 +90,6 @@ const Frames = [{
         }
     }]
 }, {
-    id: 6,
     enter: [{
         selector: ['#enter-delay-1'],
         duration: 0.6 * duration,
@@ -119,7 +112,6 @@ const Frames = [{
         }
     }]
 }, {
-    id: 7,
     exit: [{
         selector: ['#exit-single-1'],
         duration,
@@ -128,7 +120,6 @@ const Frames = [{
         }
     }]
 }, {
-    id: 8,
     exit: [{
         selector: ['#exit-multiple-1'],
         duration: duration / 2,
@@ -143,7 +134,6 @@ const Frames = [{
         }
     }]
 }, {
-    id: 6,
     exit: [{
         selector: ['#exit-delay-1'],
         duration: 0.6 * duration,
