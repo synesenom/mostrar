@@ -7,6 +7,17 @@ import SceneObject from './scene-object'
 
 // TODO Lump transitions with same delay and duration together.
 export default function Scene (selector) {
+    const TAGS = {
+        object: {
+            hidden: 'mo',
+            visible: 'mo-v'
+        }
+    }
+
+    const CLASSES = {
+        object: 'mo'
+    }
+
     let _ = {
         frames: [],
 
@@ -24,20 +35,21 @@ export default function Scene (selector) {
 
     function compileTags () {
         // Compile <mo> tags to hidden divs.
-        compile('mo', 'div', {
+        compile(TAGS.object.hidden, 'div', [CLASSES.object], {
             display: 'none',
             opacity: 0
         })
 
         // Compile <mo-s> tags to shown divs.
-        compile('mo-s', 'div')
+        compile(TAGS.object.visible, 'div', [CLASSES.object])
     }
 
     const api = {}
 
     /* test-code */
     api.__test__ = {
-        _
+        _,
+        compileTags
     }
     /* end-test-code */
 
@@ -67,6 +79,9 @@ export default function Scene (selector) {
         _.frames = frames.map((d, index) => Object.assign(d, {
             index
         }))
+
+        // Compile HTML.
+        compileTags()
 
         // Build scene.
         _.objects = select(selector).selectAll('.mo')

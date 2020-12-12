@@ -82,10 +82,12 @@ function assert_frame_0 (scene) {
         setTimeout(() => {
             assert.equal(scene.__test__._.current, 0)
             const obj1 = document.getElementById('mo-1')
+            assert.deepEqual(obj1.tagName, 'DIV')
             assert.deepEqual(obj1.style.display, '')
             assert.deepEqual(obj1.style.color, 'rgb(0, 0, 0)')
             assert.deepEqual(obj1.title, 'First object')
             const obj2 = document.getElementById('mo-2')
+            assert.deepEqual(obj2.tagName, 'DIV')
             assert.deepEqual(obj2.style.display, 'none')
             assert.deepEqual(obj2.style.color, '')
             assert.deepEqual(obj2.style.backgroundColor, 'orange')
@@ -157,6 +159,18 @@ beforeEach(() => {
 })
 
 describe('Scene', () => {
+    describe('.compileTags()', () => {
+        it('should compile tags', async () => {
+            // Add scene.
+            document.body.innerHTML = '<mo-v id="mo-1" class="foo" style="color:rgb(0, 0, 0)" title="First object">Visible object</mo-v><mo id="mo-2" class="bar" style="background-color:orange" title="Second object">Hidden object</mo>'
+
+            // Compile scene.
+            const scene = Scene('body')
+            scene.__test__.compileTags()
+
+            return assert_frame_0(scene)
+        })
+    })
     describe('.init()', () => {
         it('should build scene', async () => {
             addObjects()
