@@ -1,4 +1,5 @@
 import { event, select } from 'd3'
+import jsyaml from 'js-yaml'
 import compile from './utils/compile'
 import SceneObject from './scene-object'
 
@@ -28,28 +29,24 @@ export default function Scene (selector) {
         objects: []
     }
 
+    // TODO Move this to transition.
+    function parseTransitions (transitionCollection) {
+        return Object.entries(transitionCollection || [])
+            .map(([selector, details]) => Object.assign(details, {
+                selector: selector.split(' ')
+            }))
+    }
+
     function jump (frame) {
         _.objects.forEach(obj => obj.toFrame(_.current, frame))
         _.current = frame
-    }
-
-    function compileTags () {
-        // Compile <mo> tags to hidden divs.
-        compile(TAGS.object.hidden, 'div', [CLASSES.object], {
-            display: 'none',
-            opacity: 0
-        })
-
-        // Compile <mo-v> tags to shown divs.
-        compile(TAGS.object.visible, 'div', [CLASSES.object])
     }
 
     const api = {}
 
     /* test-code */
     api.__test__ = {
-        _,
-        compileTags
+        _
     }
     /* end-test-code */
 
@@ -74,14 +71,28 @@ export default function Scene (selector) {
         return api
     }
 
-    api.init = frames => {
-        // Add indices to frames.
-        _.frames = frames.map((d, index) => Object.assign(d, {
-            index
-        }))
+    api.init = async path => {
+        // Load frames from YAML file and add indices.
+        const frames = jsyaml.load(await d3.text(path))
 
-        // Compile HTML.
-        compileTags()
+        // TODO Move this to Frame.
+        _.frames = Object.entries(frames)
+            // Map selectors to actions.
+            .map(([name, frame]) => ({
+                name,
+                enter: parseTransitions(frame.enter),
+                update: parseTransitions(frame.update),
+                exit: parseTransitions(frame.exit)
+            }))
+
+            // Sort frames.
+            .sort((a, b) => a.name.localeCompare(b.name))
+
+            // Add index.
+            .map((d, index) => Object.assign(d, {
+                index
+            }))
+        console.log(_.frames)
 
         // Build scene.
         _.objects = select(selector).selectAll('.' + CLASSES.object)

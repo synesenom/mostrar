@@ -1,0 +1,112 @@
+0.0:
+    update:
+        '.mo':
+            duration: 700
+1.1:
+    update:
+        '#update-single-1':
+            duration: 700
+            attr:
+                r: 30
+            style:
+                fill: 'firebrick'
+1.2:
+    update:
+        '#update-multiple-1':
+            duration: 350
+            attr:
+                r: 30
+            style:
+                fill: 'firebrick'
+        '#update-multiple-2':
+             duration: 700
+             attr:
+                 r: 10
+             style:
+                 fill: 'firebrick'
+1.3:
+    update:
+        '#update-delay-1':
+            duration: 420
+            attr:
+                width: '60%'
+            style:
+                fill: 'firebrick'
+        '#update-delay-2':
+            duration: 420
+            delay: 140
+            attr:
+                width: '60%'
+            style:
+                fill: 'firebrick'
+        '#update-delay-3':
+            duration: 420
+            delay: 280
+            attr:
+                width: '60%'
+            style:
+                fill: 'firebrick'
+2.1:
+    enter:
+        '#enter-single-1':
+            duration: 700
+            style:
+                opacity: 1
+2.2:
+    enter:
+        '#enter-multiple-1':
+            duration: 350
+            style:
+                opacity: 1
+        '#enter-multiple-2':
+            duration: 700
+            style:
+                opacity: 1
+2.3:
+    enter:
+        '#enter-delay-1':
+            duration: 420
+            style:
+                opacity: 1
+        '#enter-delay-2':
+            duration: 420
+            delay: 140
+            style:
+                opacity: 1
+        '#enter-delay-3':
+            duration: 420
+            delay: 280
+            style:
+                opacity: 1
+3.1:
+    exit:
+        '#exit-single-1':
+            duration: 700
+            style:
+                opacity: 0
+3.2:
+    exit:
+        '#exit-multiple-1':
+            duration: 350
+            style:
+                opacity: 0
+        '#exit-multiple-2':
+            duration: 700
+            style:
+                opacity: 0
+3.3:
+    exit:
+        '#exit-delay-1':
+            duration: 420
+            style:
+                opacity: 0
+        '#exit-delay-2':
+            duration: 420
+            delay: 140
+            style:
+                opacity: 0
+        '#exit-delay-3':
+            duration: 420
+            delay: 280
+            style:
+                opacity: 0
