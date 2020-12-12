@@ -9,7 +9,7 @@ import SceneObject from './scene-object'
 export default function Scene (selector) {
     const TAGS = {
         object: {
-            hidden: 'mo',
+            hidden: 'mo-h',
             visible: 'mo-v'
         }
     }

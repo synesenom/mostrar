@@ -162,7 +162,7 @@ describe('Scene', () => {
     describe('.compileTags()', () => {
         it('should compile tags', async () => {
             // Add scene.
-            document.body.innerHTML = '<mo-v id="mo-1" class="foo" style="color:rgb(0, 0, 0)" title="First object">Visible object</mo-v><mo id="mo-2" class="bar" style="background-color:orange" title="Second object">Hidden object</mo>'
+            document.body.innerHTML = '<mo-v id="mo-1" class="foo" style="color:rgb(0, 0, 0)" title="First object">Visible object</mo-v><mo-h id="mo-2" class="bar" style="background-color:orange" title="Second object">Hidden object</mo-h>'
 
             // Compile scene.
             const scene = Scene('body')
