@@ -1,4 +1,4 @@
-import { select } from 'd3'
+import { event, select } from 'd3'
 import compile from './utils/compile'
 import SceneObject from './scene-object'
 
@@ -94,7 +94,7 @@ export default function Scene (selector) {
         const forward = controls.forward || []
         const backward = controls.backward || []
         const bookmarks = controls.bookmarks || {}
-        select('body').on('keydown.controls', event => {
+        select('body').on('keydown.controls', () => {
             if (forward.indexOf(event.code) > -1) {
                 api.forward()
                 return
