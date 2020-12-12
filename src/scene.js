@@ -1,6 +1,5 @@
 import { event, select } from 'd3'
 import jsyaml from 'js-yaml'
-import compile from './utils/compile'
 import SceneObject from './scene-object'
 
 // TODO Add callback option when frame is changed.
@@ -8,13 +7,6 @@ import SceneObject from './scene-object'
 
 // TODO Lump transitions with same delay and duration together.
 export default function Scene (selector) {
-    const TAGS = {
-        object: {
-            hidden: 'mo-h',
-            visible: 'mo-v'
-        }
-    }
-
     const CLASSES = {
         object: 'mo'
     }
