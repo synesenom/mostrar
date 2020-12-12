@@ -1,4 +1,5 @@
 import { select } from 'd3'
+import compile from './utils/compile'
 import SceneObject from './scene-object'
 
 // TODO Add callback option when frame is changed.
@@ -19,6 +20,17 @@ export default function Scene (selector) {
     function jump (frame) {
         _.objects.map(obj => obj.toFrame(_.current, frame))
         _.current = frame
+    }
+
+    function compileTags () {
+        // Compile <mo> tags to hidden divs.
+        compile('mo', 'div', {
+            display: 'none',
+            opacity: 0
+        })
+
+        // Compile <mo-s> tags to shown divs.
+        compile('mo-s', 'div')
     }
 
     const api = {}
@@ -57,7 +69,7 @@ export default function Scene (selector) {
         }))
 
         // Build scene.
-        _.objects = select(selector).selectAll('.obj')
+        _.objects = select(selector).selectAll('.mo')
             .nodes()
             .map(d => SceneObject(d).init(_.frames))
         return api

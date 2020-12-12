@@ -8,7 +8,7 @@ import * as d3 from 'd3'
 const FRAMES = [{
     id: 1,
     update: [{
-        selector: ['.obj'],
+        selector: ['.mo'],
         style: {
             color: 'rgb(255, 0, 0)'
         },
@@ -60,8 +60,8 @@ function addObjects () {
         }
     }].forEach((d, i) => {
         const el = d3.select('body').append('div')
-            .attr('id', 'obj-' + (i + 1))
-            .attr('class', 'obj ' + d.classList.join(' '))
+            .attr('id', 'mo-' + (i + 1))
+            .attr('class', 'mo ' + d.classList.join(' '))
 
         for (const key in d.style) {
             if (d.style.hasOwnProperty(key)) {
@@ -81,11 +81,11 @@ function assert_frame_0 (scene) {
     return new Promise(resolve => {
         setTimeout(() => {
             assert.equal(scene.__test__._.current, 0)
-            const obj1 = document.getElementById('obj-1')
+            const obj1 = document.getElementById('mo-1')
             assert.deepEqual(obj1.style.display, '')
             assert.deepEqual(obj1.style.color, 'rgb(0, 0, 0)')
             assert.deepEqual(obj1.title, 'First object')
-            const obj2 = document.getElementById('obj-2')
+            const obj2 = document.getElementById('mo-2')
             assert.deepEqual(obj2.style.display, 'none')
             assert.deepEqual(obj2.style.color, '')
             assert.deepEqual(obj2.style.backgroundColor, 'orange')
@@ -99,11 +99,11 @@ function assert_frame_1 (scene) {
     return new Promise(resolve => {
         setTimeout(() => {
             assert.equal(scene.__test__._.current, 1)
-            const obj1 = document.getElementById('obj-1')
+            const obj1 = document.getElementById('mo-1')
             assert.deepEqual(obj1.style.display, '')
             assert.deepEqual(obj1.style.color, 'rgb(255, 0, 0)')
             assert.deepEqual(obj1.title, 'Frame 1')
-            const obj2 = document.getElementById('obj-2')
+            const obj2 = document.getElementById('mo-2')
             assert.deepEqual(obj2.style.display, 'none')
             assert.deepEqual(obj2.style.color, 'rgb(255, 0, 0)')
             assert.deepEqual(obj2.style.backgroundColor, 'orange')
@@ -117,11 +117,11 @@ function assert_frame_2 (scene) {
     return new Promise(resolve => {
         setTimeout(() => {
             assert.equal(scene.__test__._.current, 2)
-            const obj1 = document.getElementById('obj-1')
+            const obj1 = document.getElementById('mo-1')
             assert.deepEqual(obj1.style.display, 'none')
             assert.deepEqual(obj1.style.color, 'rgb(255, 255, 0)')
             assert.deepEqual(obj1.title, 'Exited')
-            const obj2 = document.getElementById('obj-2')
+            const obj2 = document.getElementById('mo-2')
             assert.deepEqual(obj2.style.display, 'none')
             assert.deepEqual(obj2.style.color, 'rgb(255, 0, 0)')
             assert.deepEqual(obj2.style.backgroundColor, 'orange')
@@ -135,11 +135,11 @@ function assert_frame_3 (scene) {
     return new Promise(resolve => {
         setTimeout(() => {
             assert.equal(scene.__test__._.current, 3)
-            const obj1 = document.getElementById('obj-1')
+            const obj1 = document.getElementById('mo-1')
             assert.deepEqual(obj1.style.display, 'none')
             assert.deepEqual(obj1.style.color, 'rgb(255, 255, 0)')
             assert.deepEqual(obj1.title, 'Exited')
-            const obj2 = document.getElementById('obj-2')
+            const obj2 = document.getElementById('mo-2')
             assert.deepEqual(obj2.style.display, '')
             assert.deepEqual(obj2.style.color, 'rgb(0, 255, 0)')
             assert.deepEqual(obj2.style.backgroundColor, 'orange')
@@ -163,8 +163,8 @@ describe('Scene', () => {
 
             // Build objects separate.
             const objects = [
-                SceneObject(document.getElementById('obj-1')).init(FRAMES),
-                SceneObject(document.getElementById('obj-2')).init(FRAMES)
+                SceneObject(document.getElementById('mo-1')).init(FRAMES),
+                SceneObject(document.getElementById('mo-2')).init(FRAMES)
             ]
 
             // Build scene.
