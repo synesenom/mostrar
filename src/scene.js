@@ -29,7 +29,7 @@ export default function Scene (selector) {
     }
 
     function jump (frame) {
-        _.objects.map(obj => obj.toFrame(_.current, frame))
+        _.objects.forEach(obj => obj.toFrame(_.current, frame))
         _.current = frame
     }
 
@@ -40,7 +40,7 @@ export default function Scene (selector) {
             opacity: 0
         })
 
-        // Compile <mo-s> tags to shown divs.
+        // Compile <mo-v> tags to shown divs.
         compile(TAGS.object.visible, 'div', [CLASSES.object])
     }
 
@@ -84,7 +84,7 @@ export default function Scene (selector) {
         compileTags()
 
         // Build scene.
-        _.objects = select(selector).selectAll('.mo')
+        _.objects = select(selector).selectAll('.' + CLASSES.object)
             .nodes()
             .map(d => SceneObject(d).init(_.frames))
         return api
