@@ -1,7 +1,9 @@
-import stringify from 'json-stable-stringify'
 import { TRANSITION_TYPES } from './transition'
 import Style from './style'
 import Attributes from './attributes'
+/* test-code */
+import stringify from 'json-stable-stringify'
+/* end-test-code */
 
 export default function State (state) {
     const _ = {

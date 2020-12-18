@@ -4,7 +4,8 @@ import stripCode from 'rollup-plugin-strip-code'
 
 const copyright = `// ${meta.homepage} v${meta.version} Copyright ${(new Date).getFullYear()} ${meta.author.name}`
 const dependencies = {
-    'd3': 'd3'
+    'd3': 'd3',
+    'js-yaml': 'jsyaml'
 }
 
 export default {

@@ -1,4 +1,6 @@
+/* test-code */
 import stringify from 'json-stable-stringify'
+/* end-test-code */
 
 export default function Style (style) {
     const _ = {

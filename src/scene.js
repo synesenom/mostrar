@@ -1,4 +1,4 @@
-import { event, select, selectAll, text } from 'd3'
+import { event, select, text } from 'd3'
 import jsyaml from 'js-yaml'
 import SceneObject from './scene-object'
 
