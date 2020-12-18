@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs'
 import { assert } from 'chai'
 import { JSDOM } from 'jsdom'
 import { describe, it, beforeEach } from 'mocha'
@@ -5,6 +6,7 @@ import SceneObject from '../src/scene-object'
 import Scene from '../src/scene'
 import * as d3 from 'd3'
 
+/*
 const FRAMES = [{
     id: 1,
     update: [{
@@ -39,6 +41,8 @@ const FRAMES = [{
         }
     }]
 }]
+ */
+const FRAMES = './test/test_data/test_scene.yml'
 
 function addObjects () {
     [{
@@ -156,6 +160,18 @@ beforeEach(() => {
     const dom = new JSDOM('<html><body></body></html>')
     global.window = dom.window
     global.document = dom.window.document
+
+    // Mock fetch method that just reads a local file.
+    global.fetch = function (url) {
+        return new Promise(resolve => {
+            resolve({
+                ok: true,
+                text () {
+                    readFileSync(url, {encoding: 'utf8'})
+                }
+            })
+        })
+    }
 })
 
 describe('Scene', () => {
@@ -170,7 +186,7 @@ describe('Scene', () => {
             ]
 
             // Build scene.
-            const scene = Scene('body')
+            const scene = await Scene('body')
                 .init(FRAMES)
 
             assert.deepEqual(scene.__test__._.current, 0)
@@ -185,29 +201,33 @@ describe('Scene', () => {
     describe('.jumpTo()', () => {
         it('should do nothing if jumping to the same frame', async () => {
             addObjects()
-            return assert_frame_0(Scene('body')
+            const scene = await Scene('body')
                 .init(FRAMES)
+            return assert_frame_0(scene
                 .jumpTo(0))
         })
 
         it('should do nothing if frame is below 0', async () => {
             addObjects()
-            return assert_frame_0(Scene('body')
+            const scene = await Scene('body')
                 .init(FRAMES)
+            return assert_frame_0(scene
                 .jumpTo(-1))
         })
 
         it('should do nothing if frame is above max', async () => {
             addObjects()
-            return assert_frame_0(Scene('body')
+            const scene = await Scene('body')
                 .init(FRAMES)
+            return assert_frame_0(scene
                 .jumpTo(4))
         })
 
         it('should jump to frame', async () => {
             addObjects()
-            return assert_frame_3(Scene('body')
+            const scene = await Scene('body')
                 .init(FRAMES)
+            return assert_frame_3(scene
                 .jumpTo(3))
         })
     })
@@ -215,17 +235,18 @@ describe('Scene', () => {
     describe('.forward()', () => {
         it('should not do anything if on last frame', async () => {
             addObjects()
-            return assert_frame_3(Scene('body')
+            const scene = await Scene('body')
                 .init(FRAMES)
+            return assert_frame_3(scene
                 .jumpTo(3)
                 .forward())
         })
 
         it('should advance to next frame', async () => {
             addObjects()
-            return assert_frame_1(Scene('body')
+            const scene = await Scene('body')
                 .init(FRAMES)
-                .forward())
+            return assert_frame_1(scene.forward())
         })
     })
 
@@ -239,21 +260,23 @@ describe('Scene', () => {
 
         it('should go back to previous frame', async () => {
             addObjects()
-            return assert_frame_2(Scene('body')
+            const scene = await Scene('body')
                 .init(FRAMES)
+            return assert_frame_2(scene
                 .jumpTo(3)
-                .backward())
+                .backward()
+            )
         })
     })
 
     describe('.controls()', () => {
         it('should bind forward controls', async () => {
             addObjects()
-            const scene = Scene('body')
-                .init(FRAMES)
+            const scene = await Scene('body')
                 .controls({
                     forward: ['Space']
                 })
+                .init(FRAMES)
 
             document.body.dispatchEvent(new window.KeyboardEvent('keydown', {'code': 'Space'}))
             return assert_frame_1(scene)
@@ -261,12 +284,12 @@ describe('Scene', () => {
 
         it('should bind backward controls', async () => {
             addObjects()
-            const scene = Scene('body')
-                .init(FRAMES)
+            const scene = await Scene('body')
                 .controls({
                     backward: ['Space']
                 })
-                .jumpTo(3)
+                .init(FRAMES)
+            scene.jumpTo(3)
 
             document.body.dispatchEvent(new window.KeyboardEvent('keydown', {'code': 'Space'}))
             return assert_frame_2(scene)
@@ -274,13 +297,13 @@ describe('Scene', () => {
 
         it('should bind bookmark controls and trigger it', async () => {
             addObjects()
-            const scene = Scene('body')
-                .init(FRAMES)
+            const scene = await Scene('body')
                 .controls({
                     bookmarks: {
                         'Space': 2
                     }
                 })
+                .init(FRAMES)
 
             // Unknown key.
             document.body.dispatchEvent(new window.KeyboardEvent('keydown', {'code': 'ArrowLeft'}))

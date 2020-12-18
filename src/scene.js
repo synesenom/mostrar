@@ -1,4 +1,4 @@
-import { event, select } from 'd3'
+import { event, select, selectAll, text } from 'd3'
 import jsyaml from 'js-yaml'
 import SceneObject from './scene-object'
 
@@ -65,7 +65,7 @@ export default function Scene (selector) {
 
     api.init = async path => {
         // Load frames from YAML file and add indices.
-        const frames = jsyaml.load(await d3.text(path))
+        const frames = jsyaml.load(await text(path))
 
         // TODO Move this to Frame.
         _.frames = Object.entries(frames)
@@ -84,7 +84,6 @@ export default function Scene (selector) {
             .map((d, index) => Object.assign(d, {
                 index
             }))
-        console.log(_.frames)
 
         // Build scene.
         _.objects = select(selector).selectAll('.' + CLASSES.object)
