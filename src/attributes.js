@@ -15,13 +15,6 @@ export default function Attributes (attributes = {}) {
     // Public methods.
     const api = {}
 
-    /**
-     * Returns the string representation of the attributes.
-     *
-     * @method toString
-     * @memberOf Attributes
-     * @return {string} String representation of the attributes.
-     */
     /* test-code */
     api.toString = () => `Attributes{${Object.keys(_.attributes)
         .sort()
@@ -29,7 +22,13 @@ export default function Attributes (attributes = {}) {
         .join(', ')}}`
     /* end-test-code */
 
-    // TODO Docstring.
+    /**
+     * Returns the number of attributes.
+     *
+     * @method size
+     * @memberOf Attributes
+     * @return {number} Number of attributes.
+     */
     api.size = () => Object.keys(_.attributes).length
 
     /**
@@ -90,6 +89,15 @@ export default function Attributes (attributes = {}) {
                 return diff
             }, {})
     )
+
+    /**
+     * Returns a sorted array of property names in these attributes.
+     *
+     * @method names
+     * @memberOf Attributes
+     * @return {string[]} Array containing the attribute names.
+     */
+    api.names = () => Object.keys(_.attributes).sort()
 
     // TODO Remove this.
     // TODO Separate selection parameter in other method.

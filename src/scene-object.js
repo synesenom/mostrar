@@ -1,8 +1,6 @@
 import { select } from 'd3-selection'
 import extractSelectors from './utils/extract-selectors'
-import FrameCollection from './frame-collection'
-import { TRANSITION_TYPES } from './transition'
-import ElementState from './element-state'
+import State from './state'
 
 /**
  * Factory representing a scene object. A scene object is a single HTML element along with its state history and transitions.
@@ -17,7 +15,7 @@ export default function SceneObject (node) {
         selection: select(node),
 
         // Selectors that this scene object should be selected by.
-        selectors: new Set(extractSelectors(node)),
+        selectors: extractSelectors(node),
 
         // History of its states.
         states: []
@@ -26,23 +24,42 @@ export default function SceneObject (node) {
     // Public methods.
     const api = {}
 
-    /**
-     * Returns the string representation of the scene object.
-     *
-     * @method toString
-     * @memberOf SceneObject
-     * @return {string} String representation of the scene object.
-     */
+    /* test-code */
     api.toString = () => {
-        return 'SceneObject{ '
+        return 'SceneObject{'
             + `tagName: ${node.tagName.toLowerCase()}, `
-            + `selectors: { ${[..._.selectors].sort().join(', ')} }, `
-            + 'states: []'
+            + `selectors: {${[..._.selectors].sort().join(', ')}}, `
+            + `states: [${_.states.map(d => d.toString()).join(', ')}]`
             // TODO Add this when it is not empty.
             // + 'states: ' + (_.states.length === 0 ? '[]' : `[ ${_.states.map(d => d.toString()).join(', ')} ]`)
-            + ' }'
+            + '}'
     }
+    /* end-test-code */
 
+    api.init = frameCollection => {
+        // Initialize state.
+        let state = State({
+            visible: _.selection.style('display') !== 'none',
+            style: [...frameCollection.collectStyleNames(_.selectors)]
+                .reduce((style, d) => Object.assign(style, {
+                    [d]: _.selection.style(d) || null
+                }), {}),
+            attr: [...frameCollection.collectAttributeNames(_.selectors)]
+                .reduce((attr, d) => Object.assign(attr, {
+                    [d]: _.selection.attr(d) || null
+                }), {}),
+        })
+        /*{
+            visible: _.selection.style('display') !== 'none',
+            style: Style(
+
+            ),
+            attr: Attributes()
+        }*/
+        _.states.push(state)
+
+        return api
+    }
     /*
     api.init = frames => {
         // Build frame collection and read all transitions.
@@ -53,7 +70,7 @@ export default function SceneObject (node) {
         let visible = _.selection.style('display') !== 'none'
         const currentStyle = transitions.getStyle(_.selection)
         const currentAttr = transitions.getAttributes(_.selection)
-        _.states.push(ElementState({
+        _.states.push(State({
             visible,
             duration: 0,
             delay: 0,
@@ -81,7 +98,7 @@ export default function SceneObject (node) {
                 }
 
                 // Add state for frame.
-                _.states.push(ElementState({
+                _.states.push(State({
                     visible,
                     duration: transitionCollection.getMaxDuration(),
                     delay: transitionCollection.getMaxDelay(),

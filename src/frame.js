@@ -43,13 +43,7 @@ export default function Frame (config, index) {
 
     const api = {}
 
-    /**
-     * Returns the string representation of the frame.
-     *
-     * @method toString
-     * @memberOf Frame
-     * @return {string} String representation of the frame.
-     */
+    /* test-code */
     api.toString = () => {
         const entries = [`index: ${_.index}`]
 
@@ -71,6 +65,35 @@ export default function Frame (config, index) {
 
         return `Frame{${entries.join(', ')}}`
     }
+    /* end-test-code */
+
+    /**
+     * Collects all attribute names for some selectors.
+     *
+     * @method collectAttributeNames
+     * @memberOf Frame
+     * @param {string[]} selectors Array of selectors to collect attribute names for.
+     * @return {string[]} Array containing the attribute names.
+     */
+    api.collectAttributeNames = selectors => [
+        ..._.enter.collectAttributeNames(selectors),
+        ..._.update.collectAttributeNames(selectors),
+        ..._.exit.collectAttributeNames(selectors)
+    ].sort()
+
+    /**
+     * Collects all style names for some selectors.
+     *
+     * @method collectStyleNames
+     * @memberOf Frame
+     * @param {string[]} selectors Array of selectors to collect style names for.
+     * @return {string[]} Array containing the style names.
+     */
+    api.collectStyleNames = selectors => [
+        ..._.enter.collectStyleNames(selectors),
+        ..._.update.collectStyleNames(selectors),
+        ..._.exit.collectStyleNames(selectors)
+    ].sort()
 
     /*
     api.getRelevantEntries = selector => {

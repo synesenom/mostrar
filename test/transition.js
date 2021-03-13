@@ -19,28 +19,27 @@ describe('Transition', () => {
                 },
                 delay: 20,
                 duration: 10,
-                selector: ['.foo', '.bar']
-            }).toString(), 'Transition{attr: Attributes{lang: "en", title: "Foo"}, delay: 20, duration: 10, selector: [.bar, .foo], style: Style{color: "red", width: "100px"}}')
+                selectors: ['.foo', '.bar']
+            }).toString(), 'Transition{attr: Attributes{lang: "en", title: "Foo"}, delay: 20, duration: 10, selectors: [.bar, .foo], style: Style{color: "red", width: "100px"}}')
         })
     })
 
     describe('.includes()', () => {
         it('should return false if constructor selector is invalid', () => {
             assert.equal(Transition().includes(['.foo', '#bar']), false)
-            assert.equal(Transition({selector: null}).includes(['.foo', '#bar']), false)
+            assert.equal(Transition().includes(['.foo', '#bar']), false)
         })
 
         it('should return false if selector parameter is invalid', () => {
-            assert.equal(Transition({selector: ['.foo', '#bar']}).includes(), false)
-            assert.equal(Transition({selector: ['.foo', '#bar']}).includes(null), false)
+            assert.equal(Transition({selectors: ['.foo', '#bar']}).includes(), false)
         })
 
         it('should return false if no overlap', () => {
-            assert.equal(Transition({selector: ['.foo', '#bar']}).includes(['#foo', '.bar']), false)
+            assert.equal(Transition({selectors: ['.foo', '#bar']}).includes(['#foo', '.bar']), false)
         })
 
         it('should return true if there is overlap', () => {
-            assert.equal(Transition({selector: ['.foo', '#bar']}).includes(['#foo', '.bar', '#bar']), true)
+            assert.equal(Transition({selectors: ['.foo', '#bar']}).includes(['#foo', '.bar', '#bar']), true)
         })
     })
 })

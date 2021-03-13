@@ -21,7 +21,7 @@ describe('TransitionCollection', () => {
                 },
                 delay: 20,
                 duration: 10,
-                selector: ['.foo', '.bar']
+                selectors: ['.foo', '.bar']
             }, {
                 style: {
                     width: '120px',
@@ -33,8 +33,8 @@ describe('TransitionCollection', () => {
                     title: 'Bar',
                     lang: 'de'
                 },
-                selector: ['#foo', '#bar']
-            }]).toString(), 'TransitionCollection[Transition{attr: Attributes{lang: "en", title: "Foo"}, delay: 20, duration: 10, selector: [.bar, .foo], style: Style{color: "red", width: "100px"}}, Transition{attr: Attributes{lang: "de", title: "Bar"}, delay: 30, duration: 15, selector: [#bar, #foo], style: Style{color: "rgb(123, 234, 56)", width: "120px"}}]')
+                selectors: ['#foo', '#bar']
+            }]).toString(), 'TransitionCollection[Transition{attr: Attributes{lang: "en", title: "Foo"}, delay: 20, duration: 10, selectors: [.bar, .foo], style: Style{color: "red", width: "100px"}}, Transition{attr: Attributes{lang: "de", title: "Bar"}, delay: 30, duration: 15, selectors: [#bar, #foo], style: Style{color: "rgb(123, 234, 56)", width: "120px"}}]')
         })
     })
 
@@ -67,6 +67,66 @@ describe('TransitionCollection', () => {
                 },
                 selector: ['#foo', '#bar']
             }]).size(), 2)
+        })
+    })
+
+    describe('.collectAttributeNames()', () => {
+        it('should return the collection of all attributes for some selectors', () => {
+            const transitionCollection = TransitionCollection([{
+                selectors: ['.foo', '#bar'],
+                attr: {
+                    title: 'First'
+                }
+            }, {}, {
+                selectors: ['.foo'],
+                attr: {
+                    lang: 'en'
+                }
+            }, {
+                selectors: ['#bar'],
+                attr: {
+                    onclick: 'alert()'
+                }
+            }])
+
+            // .foo
+            assert.deepEqual(transitionCollection.collectAttributeNames(['.foo']), ['lang', 'title'])
+
+            // #bar
+            assert.deepEqual(transitionCollection.collectAttributeNames(['#bar']), ['onclick', 'title'])
+
+            // .foo, #bar
+            assert.deepEqual(transitionCollection.collectAttributeNames(['.foo', '#bar']), ['lang', 'onclick', 'title'])
+        })
+    })
+
+    describe('.collectStyleNames()', () => {
+        it('should return the collection of all styles for some selectors', () => {
+            const transitionCollection = TransitionCollection([{
+                selectors: ['.foo', '#bar'],
+                style: {
+                    color: 'red'
+                }
+            }, {}, {
+                selectors: ['.foo'],
+                style: {
+                    'background-color': 'blue'
+                }
+            }, {
+                selectors: ['#bar'],
+                style: {
+                    width: '100px'
+                }
+            }])
+
+            // .foo
+            assert.deepEqual(transitionCollection.collectStyleNames(['.foo']), ['background-color', 'color'])
+
+            // #bar
+            assert.deepEqual(transitionCollection.collectStyleNames(['#bar']), ['color', 'width'])
+
+            // .foo, #bar
+            assert.deepEqual(transitionCollection.collectStyleNames(['.foo', '#bar']), ['background-color', 'color', 'width'])
         })
     })
 

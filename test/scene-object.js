@@ -1,15 +1,27 @@
 import { assert } from 'chai'
-import { describe, it, beforeEach } from 'mocha'
-import ElementState from '../src/element-state'
+import { describe, it } from 'mocha'
+import State from '../src/state'
 import SceneObject from '../src/scene-object'
-import { addObjects } from './test-utils';
+import {addObjects, FRAMES} from './test-utils';
+import FrameCollection from "../src/frame-collection";
 
 
 describe('SceneObject', () => {
     describe('.toString()', () => {
         it('should return the string representation', () => {
             addObjects()
-            assert.equal(SceneObject(document.getElementById('obj-1')).toString(), 'SceneObject{ tagName: div, selectors: { #obj-1, .el, .foo, .m }, states: [] }')
+            assert.equal(SceneObject(document.getElementById('obj-1')).toString(), 'SceneObject{tagName: div, selectors: {#obj-1, .el, .foo, .m}, states: []}')
+        })
+    })
+
+    describe('.init()', () => {
+        it('should build state history', () => {
+            addObjects()
+            const frameCollection = FrameCollection(FRAMES)
+
+            const foo = SceneObject(document.getElementById('obj-1'))
+                .init(frameCollection)
+            assert.equal(foo.toString(), 'SceneObject{tagName: div, selectors: {#obj-1, .el, .foo, .m}, states: [State{attr: Attributes{onclick: "null", title: "First object"}, style: Style{background-color: "null", color: "rgb(0, 0, 0)", opacity: "null"}, visible}]}')
         })
     })
 
@@ -55,7 +67,7 @@ describe('SceneObject', () => {
                 delay: 0,
                 style: {'background-color': 'rgb(0, 0, 255)', color: 'rgb(255, 0, 0)'},
                 attr: {title: 'Changed'}
-            }].map(d => ElementState(d).__test__.toString()))
+            }].map(d => State(d).__test__.toString()))
         })
     })
 

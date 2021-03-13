@@ -1,14 +1,13 @@
-import { TRANSITION_TYPES } from './transition'
 import Style from './style'
 import Attributes from './attributes'
 
 /**
  * Factory representing the state of a DOM element.
  *
- * @function ElementState
+ * @function State
  * @param state
  */
-export default function ElementState (state) {
+export default function State (state = {}) {
     // Private members.
     const _ = {
         visible: state.visible || false,
@@ -25,7 +24,7 @@ export default function ElementState (state) {
      * Returns the string representation of the element state.
      *
      * @method toString
-     * @memberOf ElementState
+     * @memberOf State
      * @return {string} String representation of the element state.
      */
     /* test-code */
@@ -52,13 +51,22 @@ export default function ElementState (state) {
             entries.push(`visible`)
         }
 
-        return `ElementState{${entries.join(', ')}}`
+        return `State{${entries.join(', ')}}`
     }
     /* end-test-code */
 
+    /*
+    api.fromSelection = selection => {
+        return State({
+            visible: selection.style('display') !== 'none',
+            style: Style(state.style || {}),
+            attr: Attributes(state.attr || {})
+        })
+    }
+     */
+    /*
     api.isVisible = () => _.visible
 
-    /*
     api.getDuration = () => _.duration
 
     api.getDelay = () => _.delay
@@ -70,6 +78,7 @@ export default function ElementState (state) {
     api.getVisible = () => _.visible
      */
 
+    /*
     api.getTransitionType = newState => {
         if (!_.visible && newState.isVisible()) {
             return TRANSITION_TYPES.enter
@@ -83,6 +92,7 @@ export default function ElementState (state) {
             return TRANSITION_TYPES.update
         }
     }
+     */
 
     return api
 }

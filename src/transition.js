@@ -28,19 +28,13 @@ export function Transition (options = {}) {
         style: Style(options.style || {}),
         delay: options.delay || 0,
         duration: options.duration || 0,
-        selector: new Set(options.selector || [])
+        selectors: options.selectors || []
     }
 
     // Public methods.
     const api = {}
 
-    /**
-     * Returns the string representation of the transition.
-     *
-     * @method toString
-     * @memberOf Transition
-     * @return {string} String representation of the transition.
-     */
+    /* test-code */
     api.toString = () => {
         let entries = []
 
@@ -56,8 +50,8 @@ export function Transition (options = {}) {
             entries.push(`duration: ${_.duration}`)
         }
 
-        if (_.selector.size > 0) {
-            entries.push(`selector: [${[..._.selector].sort().join(', ')}]`)
+        if (_.selectors.length > 0) {
+            entries.push(`selectors: [${_.selectors.sort().join(', ')}]`)
         }
 
         if (_.style.size() > 0) {
@@ -66,6 +60,7 @@ export function Transition (options = {}) {
 
         return `Transition{${entries.join(', ')}}`
     }
+    /* end-test-code */
 
     // TODO Remove this.
     //api.GET = () => options
@@ -78,16 +73,15 @@ export function Transition (options = {}) {
      * @param {string[]} selectors Array of strings representing the selectors.
      * @return {boolean} True if there is an overlap with the selectors, false otherwise.
      */
-    api.includes = selectors => {
-        return (selectors || [])
-            .filter(d => _.selector.has(d)).length > 0
+    api.includes = (selectors = []) => {
+        return selectors.filter(d => _.selectors.indexOf(d) > -1).length > 0
     }
 
-    /*
     api.getAttributes = () => _.attr
 
     api.getStyle = () => _.style
 
+    /*
     api.getDelay = () => _.delay
 
     api.getDuration = () => _.duration

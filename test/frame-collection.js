@@ -2,67 +2,24 @@ import { assert } from 'chai'
 import { describe, it } from 'mocha'
 import FrameCollection from '../src/frame-collection'
 import TransitionCollection from '../src/transition-collection'
+import {FRAMES} from "./test-utils";
 
 describe('FrameCollection', () => {
     describe('.toString()', () => {
         it('should return the string representation', () => {
             assert.equal(FrameCollection().toString(), 'FrameCollection[]')
 
-            assert.equal(FrameCollection([{
-                name: 'first',
-                enter: [{
-                    attr: {
-                        title: 'Foo',
-                        lang: 'en'
-                    },
-                    style: {
-                        width: '100px',
-                        color: 'red'
-                    },
-                    delay: 20,
-                    duration: 10,
-                    selector: ['.foo', '.bar']
-                }, {
-                    style: {
-                        width: '120px',
-                        color: 'rgb(123, 234, 56)'
-                    },
-                    delay: 30,
-                    duration: 15,
-                    attr: {
-                        title: 'Bar',
-                        lang: 'de'
-                    },
-                    selector: ['#foo', '#bar']
-                }]
-            }, {
-                update: [{
-                    style: {
-                        width: '120px',
-                        color: 'black'
-                    },
-                    delay: 30,
-                    duration: 15,
-                    attr: {
-                        title: 'Bar 2',
-                        lang: 'se'
-                    },
-                    selector: ['#foo', '#bar']
-                }],
-                exit: [{
-                    attr: {
-                        title: 'Foo 3',
-                        lang: 'dk'
-                    },
-                    style: {
-                        width: '100px',
-                        color: 'red'
-                    },
-                    delay: 20,
-                    duration: 10,
-                    selector: ['.foo', '.bar']
-                }]
-            }]).toString(), 'FrameCollection[Frame{index: 0, name: "first", enter: TransitionCollection[Transition{attr: Attributes{lang: "en", title: "Foo"}, delay: 20, duration: 10, selector: [.bar, .foo], style: Style{color: "red", width: "100px"}}, Transition{attr: Attributes{lang: "de", title: "Bar"}, delay: 30, duration: 15, selector: [#bar, #foo], style: Style{color: "rgb(123, 234, 56)", width: "120px"}}]}, Frame{index: 1, update: TransitionCollection[Transition{attr: Attributes{lang: "se", title: "Bar 2"}, delay: 30, duration: 15, selector: [#bar, #foo], style: Style{color: "black", width: "120px"}}], exit: TransitionCollection[Transition{attr: Attributes{lang: "dk", title: "Foo 3"}, delay: 20, duration: 10, selector: [.bar, .foo], style: Style{color: "red", width: "100px"}}]}]')
+            assert.equal(FrameCollection(FRAMES).toString(), 'FrameCollection[Frame{index: 0, name: "first", update: TransitionCollection[Transition{attr: Attributes{onclick: "alert()"}, duration: 10, selectors: [#obj-1], style: Style{color: "rgb(255, 0, 0)"}}]}, Frame{index: 1, exit: TransitionCollection[Transition{delay: 10, selectors: [.foo], style: Style{background-color: "rgb(0, 0, 255)"}}, Transition{delay: 20, selectors: [.bar], style: Style{color: "rgb(0, 0, 255)"}}]}, Frame{index: 2, update: TransitionCollection[Transition{attr: Attributes{title: "Changed"}, selectors: [.el], style: Style{color: "rgb(0, 255, 0)"}}]}, Frame{index: 3, name: "fourth", enter: TransitionCollection[Transition{selectors: [.el]}]}, Frame{index: 4, update: TransitionCollection[Transition{attr: Attributes{title: "Fifth frame"}, selectors: [.bar, .foo], style: Style{opacity: "0.5"}}]}]')
+        })
+    })
+
+    describe('.collectStyleNames()', async () => {
+        it('should return the relevant style names for some selectors', () => {
+            const frameCollection = FrameCollection(FRAMES)
+
+            assert.deepEqual(frameCollection.collectStyleNames(['.foo']), ['background-color', 'opacity'])
+            assert.deepEqual(frameCollection.collectStyleNames(['.bar']), ['color', 'opacity'])
+            assert.deepEqual(frameCollection.collectStyleNames(['.foo', '.bar']), ['background-color', 'color', 'opacity'])
         })
     })
 

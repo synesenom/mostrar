@@ -15,20 +15,19 @@ export default function Style (style = {}) {
     const api = {}
 
     /* end-test-code */
-    /**
-     * Returns the string representation of the style.
-     *
-     * @method toString
-     * @memberOf Style
-     * @return {string} String representation of the style.
-     */
     api.toString = () => `Style{${Object.keys(_.style)
         .sort()
         .map(key => `${key}: "${_.style[key]}"`)
         .join(', ')}}`
     /* test-code */
 
-    // TODO Docstring.
+    /**
+     * Returns the number of style entries.
+     *
+     * @method size
+     * @memberOf Style
+     * @return {number} Number of style entries.
+     */
     api.size = () => Object.keys(_.style).length
 
     /**
@@ -90,6 +89,15 @@ export default function Style (style = {}) {
                 return diff
             }, {})
     )
+
+    /**
+     * Returns a sorted array of style names.
+     *
+     * @method names
+     * @memberOf Style
+     * @return {string[]} Array containing the style names.
+     */
+    api.names = () => Object.keys(_.style).sort()
 
     // TODO Separate selection in other method.
     /**

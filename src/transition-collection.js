@@ -17,14 +17,9 @@ export default function TransitionCollection (options = [], type) {
     // Public methods.
     const api = {}
 
-    /**
-     * Returns the string representation of the transition collection.
-     *
-     * @method toString
-     * @memberOf TransitionCollection
-     * @return {string} String representation of the transition collection.
-     */
+    /* test-code */
     api.toString = () => `TransitionCollection[${_.transitions.map(d => d.toString()).join(', ')}]`
+    /* end-test-code */
 
     /**
      * Returns the number of transitions in the collection.
@@ -34,6 +29,34 @@ export default function TransitionCollection (options = [], type) {
      * @return {number} Number of transitions in the collection.
      */
     api.size = () => _.transitions.length
+
+    /**
+     * Returns a sorted array containing all the attribute names that are affected for a specific array of selectors.
+     *
+     * @method collectAttributeNames
+     * @memberOf TransitionCollection
+     * @param {string[]} selectors Array of selectors to collect attribute names for.
+     * @return {string[]} Array containing the affected attribute names.
+     */
+    api.collectAttributeNames = selectors => _.transitions
+        .filter(d => d.includes(selectors))
+        .map(d => d.getAttributes().names())
+        .flat()
+        .sort()
+
+    /**
+     * Returns a sorted array containing all the style names that are affected for a specific array of selectors.
+     *
+     * @method collectStyleNames
+     * @memberOf TransitionCollection
+     * @param {string[]} selectors Array of selectors to collect style names for.
+     * @return {string[]} Array containing the affected style names.
+     */
+    api.collectStyleNames = selectors => _.transitions
+        .filter(d => d.includes(selectors))
+        .map(d => d.getStyle().names())
+        .flat()
+        .sort()
 
     /*
     api.getType = () => type

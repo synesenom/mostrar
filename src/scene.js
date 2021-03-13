@@ -1,5 +1,7 @@
-import jsyaml from 'js-yaml'
+import { select } from 'd3-selection';
+import jsyaml from 'js-yaml';
 import FrameCollection from "./frame-collection";
+import SceneObject from "./scene-object";
 
 // TODO Add callback option when frame is changed.
 // TODO Instead of a single transition, add support to a sequence of style/attr transitions.
@@ -69,15 +71,18 @@ export default function Scene (selector) {
 
         // Build frames.
         _.frames = FrameCollection(frames)
-        //_.frames = FrameCollection(frames)
-            // Map selectors to actions.
-            /*.map(([name, frame]) => ({
-                name,
-                enter: parseTransitions(frame.enter),
-                update: parseTransitions(frame.update),
-                exit: parseTransitions(frame.exit)
-            }))
-             */
+
+        // Initialize scene objects.
+
+
+        /*
+        // Build object state histories.
+        _.objects = select(selector).selectAll(`.${CLASSES.object}`)
+            .nodes()
+            .map(SceneObject)
+            .forEach(d => d.init(frames))
+         */
+
         return api
     }
 

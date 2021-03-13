@@ -1,42 +1,11 @@
 import {JSDOM} from "jsdom";
 import { beforeEach } from 'mocha';
 import {readFileSync} from "fs";
+import jsyaml from 'js-yaml';
 
 export const FRAMES_PATH = './test/test_data/test_scene.yml'
 
-export const FRAMES = [{
-    name: 'first',
-    update: [{
-        selector: ['#mo-1'],
-        duration: 10,
-        style: {
-            color: 'rgb(255, 0, 0)'
-        }
-    }]
-}, {
-    exit: [{
-        selector: ['.foo'],
-        delay: 10,
-        style: {
-            'background-color': 'rgb(0, 0, 255)'
-        }
-    }]
-}, {
-    enter: [{
-        selector: ['.el'],
-        style: {
-            color: 'rgb(0, 255, 0)'
-        },
-        attr: {
-            title: 'Changed'
-        }
-    }]
-}, {
-    name: 'fourth',
-    enter: [{
-        selector: ['#obj-2']
-    }]
-}]
+export const FRAMES = jsyaml.load(readFileSync(FRAMES_PATH, {encoding: 'utf8'}))
 
 beforeEach(() => {
     // Create DOM.
