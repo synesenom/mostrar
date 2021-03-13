@@ -1,0 +1,10 @@
+-
+    title: First slide
+    exit:
+        '#presentation':
+            style:
+                opacity: 0
+    enter:
+        '#first':
+            style:
+                opacity: 1

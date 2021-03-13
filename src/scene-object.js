@@ -1,25 +1,49 @@
-import { select } from 'd3'
+import { select } from 'd3-selection'
 import extractSelectors from './utils/extract-selectors'
 import FrameCollection from './frame-collection'
 import { TRANSITION_TYPES } from './transition'
-import State from './state'
+import ElementState from './element-state'
 
+/**
+ * Factory representing a scene object. A scene object is a single HTML element along with its state history and transitions.
+ *
+ * @function SceneObject
+ * @param {HTMLElement} node HTML element to animate.
+ */
 export default function SceneObject (node) {
     // Private members.
     const _ = {
+        // D3-selection of the element.
         selection: select(node),
+
+        // Selectors that this scene object should be selected by.
         selectors: new Set(extractSelectors(node)),
+
+        // History of its states.
         states: []
     }
 
+    // Public methods.
     const api = {}
 
-    /* test-code */
-    api.__test__ = {
-        _
+    /**
+     * Returns the string representation of the scene object.
+     *
+     * @method toString
+     * @memberOf SceneObject
+     * @return {string} String representation of the scene object.
+     */
+    api.toString = () => {
+        return 'SceneObject{ '
+            + `tagName: ${node.tagName.toLowerCase()}, `
+            + `selectors: { ${[..._.selectors].sort().join(', ')} }, `
+            + 'states: []'
+            // TODO Add this when it is not empty.
+            // + 'states: ' + (_.states.length === 0 ? '[]' : `[ ${_.states.map(d => d.toString()).join(', ')} ]`)
+            + ' }'
     }
-    /* end-test-code */
 
+    /*
     api.init = frames => {
         // Build frame collection and read all transitions.
         const frameCollection = FrameCollection(frames)
@@ -29,7 +53,7 @@ export default function SceneObject (node) {
         let visible = _.selection.style('display') !== 'none'
         const currentStyle = transitions.getStyle(_.selection)
         const currentAttr = transitions.getAttributes(_.selection)
-        _.states.push(State({
+        _.states.push(ElementState({
             visible,
             duration: 0,
             delay: 0,
@@ -57,7 +81,7 @@ export default function SceneObject (node) {
                 }
 
                 // Add state for frame.
-                _.states.push(State({
+                _.states.push(ElementState({
                     visible,
                     duration: transitionCollection.getMaxDuration(),
                     delay: transitionCollection.getMaxDelay(),
@@ -122,6 +146,7 @@ export default function SceneObject (node) {
 
         return api
     }
+     */
 
     return api
 }

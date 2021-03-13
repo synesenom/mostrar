@@ -1,38 +1,23 @@
-import { assert } from 'chai'
-import {beforeEach, describe, it} from 'mocha'
+import { assert } from 'chai'
+import { describe, it } from 'mocha'
 import Style from '../src/style'
 import * as d3 from 'd3'
-import {JSDOM} from 'jsdom'
+import { addObjects } from './test-utils';
 
-function addObjects () {
-    [{
-        classList: ['foo', 'bar']
-    }].forEach((d, i) => {
-        const el = document.createElement('div')
-        el.id = 'obj-' + (i + 1)
-        el.classList.add('obj', ...d.classList)
-        el.style.backgroundColor = 'orange'
-        el.title = 'First object'
-        document.body.appendChild(el)
-    })
-}
-
-beforeEach(() => {
-    // Create DOM.
-    const dom = new JSDOM('<html><body></body></html>')
-    global.window = dom.window
-    global.document = dom.window.document
-})
 
 describe('Style', () => {
-    describe('.apply()', () => {
-        it('should return a selection', () => {
-            addObjects()
-            assert.deepEqual(Style({
-                'background-color': 'pink'
-            }).apply(d3.select('#obj-1')), d3.select('#obj-1'))
-        })
+    describe('.toString()', () => {
+        it('should return the string representation', () => {
+            assert.equal(Style().toString(), 'Style{}')
 
+            assert.equal(Style({
+                width: '100px',
+                'background-color': 'red'
+            }).toString(), 'Style{background-color: "red", width: "100px"}')
+        })
+    })
+
+    describe('.apply()', () => {
         it('should change style', () => {
             addObjects()
             Style({
@@ -42,22 +27,54 @@ describe('Style', () => {
         })
     })
 
-    describe('.diff()', () => {
-        it('should return difference between two styles', () => {
+    describe('.diffTo()', () => {
+        it('should return the difference between two style', () => {
             addObjects()
-            assert.deepEqual(Style({
-                'background-color': 'red',
-                color: 'black',
-            }).diff(Style({
-                'background-color': 'red',
-                color: 'blue',
-            }), d3.select('#obj-1')).__test__.toString(), Style({
-                // Same style but different from object's current style.
-                'background-color': 'red',
+            const style1 = Style({
+                color: 'red',
+                'background-color': 'blue'
+            })
+            const style2 = Style({
+                color: 'green',
+                'background-color': 'blue'
+            })
+            const diff = style1.diffTo(style2)
+            assert.deepEqual(diff.toString(), Style({
+                color: 'green'
+            }).toString())
+        })
+    })
 
-                // Differing style.
-                color: 'blue'
-            }).__test__.toString())
+    describe('.filter()', () => {
+        it('should return the style different in selection', () => {
+            addObjects()
+            const style = Style({
+                color: 'rgb(0, 0, 0)',
+                width: '200px'
+            })
+            const el = d3.select('#obj-1')
+            const diff = style.filter(el)
+            assert.deepEqual(diff.toString(), Style({
+                width: '200px'
+            }).toString())
+        })
+    })
+
+    describe('.diff()', () => {
+        it('should return the difference between two attributes', () => {
+            addObjects()
+            const style1 = Style({
+                color: 'rgb(0, 0, 0)',
+                width: '100px'
+            })
+            const style2 = Style({
+                color: 'rgb(0, 0, 0)',
+                width: '200px'
+            })
+            const diff = style1.diff(style2, d3.select('#obj-1'))
+            assert.deepEqual(diff.toString(), Style({
+                width: '200px'
+            }).toString())
         })
     })
 })

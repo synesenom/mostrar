@@ -1,45 +1,97 @@
+import Attributes from "./attributes";
+import Style from "./style";
+
+/**
+ * Transition types. These define the possible changes in the scene.
+ */
 export const TRANSITION_TYPES = {
+    // Entering objects: display:none -> display:null.
     enter: 'enter',
+
+    // Updating objects: attribute or style changes.
     update: 'update',
+
+    // Exiting objects: display:<any> => display:none.
     exit: 'exit'
 }
 
-export function Transition (entry) {
+/**
+ * Factory representing a single transition for a set of selectors.
+ *
+ * @function Transition
+ * @param {Object} options Object describing the transition options.
+ */
+export function Transition (options = {}) {
+    // Private members.
     const _ = {
-        // TODO Make this Attributes.
-        attr: entry.attr || {},
-        // TODO Make this Style.
-        style: entry.style || {},
-        delay: entry.delay || 0,
-        duration: entry.duration || 0,
-        selector: entry.selector || []
+        attr: Attributes(options.attr || {}),
+        style: Style(options.style || {}),
+        delay: options.delay || 0,
+        duration: options.duration || 0,
+        selector: new Set(options.selector || [])
     }
 
+    // Public methods.
     const api = {}
 
-    /* test-code */
-    api.__test__ = {
-        _
+    /**
+     * Returns the string representation of the transition.
+     *
+     * @method toString
+     * @memberOf Transition
+     * @return {string} String representation of the transition.
+     */
+    api.toString = () => {
+        let entries = []
+
+        if (_.attr.size() > 0) {
+            entries.push(`attr: ${_.attr.toString()}`)
+        }
+
+        if (_.delay > 0) {
+            entries.push(`delay: ${_.delay}`)
+        }
+
+        if (_.duration > 0) {
+            entries.push(`duration: ${_.duration}`)
+        }
+
+        if (_.selector.size > 0) {
+            entries.push(`selector: [${[..._.selector].sort().join(', ')}]`)
+        }
+
+        if (_.style.size() > 0) {
+            entries.push(`style: ${_.style.toString()}`)
+        }
+
+        return `Transition{${entries.join(', ')}}`
     }
-    /* end-test-code */
 
     // TODO Remove this.
-    api.GET = () => entry
+    //api.GET = () => options
 
+    /**
+     * Checks if any of a set of selectors are included among the transition's selectors.
+     *
+     * @method includes
+     * @memberOf Transition
+     * @param {string[]} selectors Array of strings representing the selectors.
+     * @return {boolean} True if there is an overlap with the selectors, false otherwise.
+     */
     api.includes = selectors => {
-        const s = new Set(selectors || [])
-        return _.selector.filter(d => s.has(d)).length > 0
+        return (selectors || [])
+            .filter(d => _.selector.has(d)).length > 0
     }
 
-    // TODO Return Attributes.
+    /*
     api.getAttributes = () => _.attr
 
-    // TODO Return Style.
     api.getStyle = () => _.style
 
     api.getDelay = () => _.delay
 
     api.getDuration = () => _.duration
+     */
 
     return api
 }

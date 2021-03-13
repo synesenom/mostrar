@@ -1,38 +1,23 @@
-import { assert } from 'chai'
-import {beforeEach, describe, it} from 'mocha'
+import { assert } from 'chai'
+import { describe, it } from 'mocha'
 import Attributes from '../src/attributes'
 import * as d3 from 'd3'
-import {JSDOM} from 'jsdom'
+import { addObjects } from './test-utils';
 
-function addObjects () {
-    [{
-        classList: ['foo', 'bar']
-    }].forEach((d, i) => {
-        const el = document.createElement('div')
-        el.id = 'obj-' + (i + 1)
-        el.classList.add('obj', ...d.classList)
-        el.style.backgroundColor = 'orange'
-        el.title = 'First object'
-        document.body.appendChild(el)
-    })
-}
-
-beforeEach(() => {
-    // Create DOM.
-    const dom = new JSDOM('<html><body></body></html>')
-    global.window = dom.window
-    global.document = dom.window.document
-})
 
 describe('Attributes', () => {
-    describe('.apply()', () => {
-        it('should return a selection', () => {
-            addObjects()
-            assert.deepEqual(Attributes({
-                title: 'Changed'
-            }).apply(d3.select('#obj-1')), d3.select('#obj-1'))
-        })
+    describe('.toString()', () => {
+        it('should return the string representation', () => {
+            assert.equal(Attributes().toString(), 'Attributes{}')
 
+            assert.equal(Attributes({
+                title: 'Some title',
+                lang: 'en'
+            }).toString(), 'Attributes{lang: "en", title: "Some title"}')
+        })
+    })
+
+    describe('.apply()', () => {
         it('should change attributes', () => {
             addObjects()
             Attributes({
@@ -42,22 +27,54 @@ describe('Attributes', () => {
         })
     })
 
-    describe('.diff()', () => {
-        it('should return difference between two attributes', () => {
+    describe('.diffTo()', () => {
+        it('should return the difference between two attributes', () => {
             addObjects()
-            assert.deepEqual(Attributes({
+            const attr1 = Attributes({
                 lang: 'de',
                 title: 'Changed'
-            }).diff(Attributes({
+            })
+            const attr2 = Attributes({
                 lang: 'en',
                 title: 'Changed'
-            }), d3.select('#obj-1')).__test__.toString(), Attributes({
-                // Same attributes but different from object's current attributes.
-                lang: 'en',
+            })
+            const diff = attr1.diffTo(attr2)
+            assert.deepEqual(diff.toString(), Attributes({
+                lang: 'en'
+            }).toString())
+        })
+    })
 
-                // Differing attribute.
+    describe('.filter()', () => {
+        it('should return the attributes different in selection', () => {
+            addObjects()
+            const attr = Attributes({
+                lang: 'en',
                 title: 'Changed'
-            }).__test__.toString())
+            })
+            const el = d3.select('#obj-1')
+            const diff = attr.filter(el)
+            assert.deepEqual(diff.toString(), Attributes({
+                title: 'Changed'
+            }).toString())
+        })
+    })
+
+    describe('.diff()', () => {
+        it('should return the difference between two attributes', () => {
+            addObjects()
+            const attr1 = Attributes({
+                lang: 'en',
+                title: 'First object'
+            })
+            const attr2 = Attributes({
+                lang: 'en',
+                title: 'Changed'
+            })
+            const diff = attr1.diff(attr2, d3.select('#obj-1'))
+            assert.deepEqual(diff.toString(), Attributes({
+                title: 'Changed'
+            }).toString())
         })
     })
 })

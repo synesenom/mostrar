@@ -1,21 +1,35 @@
-1:
+-
+    name: first
     update:
-        '.mo':
-             style:
-                 color: 'rgb(255, 0, 0)'
-             attr:
-                 title: 'Frame 1'
-2:
+        -
+            selector: ['#obj-1']
+            duration: 10
+            style:
+                color: rgb(255, 0, 0)
+
+-
     exit:
-        '.foo':
-               style:
-                   color: 'rgb(255, 255, 0)'
-               attr:
-                   title: 'Exited'
-3:
+        -
+            selector: ['.foo']
+            delay: 10
+            style:
+                background-color: rgb(0, 0, 255)
+        -   selector: [ '.bar' ]
+            delay: 20
+            style:
+                color: rgb(0, 0, 255)
+
+-
     enter:
-        '.bar':
-                style:
-                    color: 'rgb(0, 255, 0)'
-                attr:
-                    title: 'Entered'
+        -
+            selector: ['.el']
+            style:
+                color: rgb(0, 255, 0)
+            attr:
+                title: Changed
+
+-
+    name: fourth
+    enter:
+        -
+            selector: ['#obj-2']

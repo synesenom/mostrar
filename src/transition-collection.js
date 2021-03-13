@@ -1,20 +1,41 @@
-import { max } from 'd3'
 import { Transition } from './transition'
 
-export default function TransitionCollection (entries, type) {
+/**
+ * Factory representing a collection of transitions: this encapsulates the full transition from one frame to another.
+ *
+ * @function TransitionCollection
+ * @param {Object[]=} options Array of objects representing the transition options.
+ * @param {string=} type Type of the transition collection.
+ */
+export default function TransitionCollection (options = [], type) {
+    // Private members.
     const _ = {
         // TODO Remove invalid/empty transitions.
-        transitions: (entries || []).map(Transition)
+        transitions: options.map(Transition)
     }
 
+    // Public methods.
     const api = {}
 
-    /* test-code */
-    api.__test__ = {
-        _
-    }
-    /* end-test-code */
+    /**
+     * Returns the string representation of the transition collection.
+     *
+     * @method toString
+     * @memberOf TransitionCollection
+     * @return {string} String representation of the transition collection.
+     */
+    api.toString = () => `TransitionCollection[${_.transitions.map(d => d.toString()).join(', ')}]`
 
+    /**
+     * Returns the number of transitions in the collection.
+     *
+     * @method size
+     * @memberOf TransitionCollection
+     * @return {number} Number of transitions in the collection.
+     */
+    api.size = () => _.transitions.length
+
+    /*
     api.getType = () => type
 
     api.getAttributes = selection => {
@@ -48,6 +69,7 @@ export default function TransitionCollection (entries, type) {
     api.getMaxDelay = () => max(_.transitions.map(d => d.getDelay())) || 0
 
     api.getMaxDuration = () => max(_.transitions.map(d => d.getDuration())) || 0
+     */
 
     return api
 }

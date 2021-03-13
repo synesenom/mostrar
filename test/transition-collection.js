@@ -1,30 +1,76 @@
-import { assert } from 'chai'
-import { JSDOM } from 'jsdom'
-import {beforeEach, describe, it} from 'mocha'
+import { assert } from 'chai'
+import {describe, it} from 'mocha'
 import TransitionCollection from '../src/transition-collection'
 import * as d3 from 'd3'
+import {addObjects} from "./test-utils";
 
-function addObjects () {
-    [{
-        classList: ['foo', 'bar']
-    }].forEach((d, i) => {
-        const el = document.createElement('div')
-        el.id = 'obj-' + (i + 1)
-        el.classList.add('obj', ...d.classList)
-        el.style.backgroundColor = 'orange'
-        el.title = 'First object'
-        document.body.appendChild(el)
-    })
-}
-
-beforeEach(() => {
-    // Create DOM.
-    const dom = new JSDOM('<html><body></body></html>')
-    global.window = dom.window
-    global.document = dom.window.document
-})
 
 describe('TransitionCollection', () => {
+    describe('.toString()', () => {
+        it('should return the string representation', () => {
+            assert.equal(TransitionCollection(), 'TransitionCollection[]')
+
+            assert.equal(TransitionCollection([{
+                attr: {
+                    title: 'Foo',
+                    lang: 'en'
+                },
+                style: {
+                    width: '100px',
+                    color: 'red'
+                },
+                delay: 20,
+                duration: 10,
+                selector: ['.foo', '.bar']
+            }, {
+                style: {
+                    width: '120px',
+                    color: 'rgb(123, 234, 56)'
+                },
+                delay: 30,
+                duration: 15,
+                attr: {
+                    title: 'Bar',
+                    lang: 'de'
+                },
+                selector: ['#foo', '#bar']
+            }]).toString(), 'TransitionCollection[Transition{attr: Attributes{lang: "en", title: "Foo"}, delay: 20, duration: 10, selector: [.bar, .foo], style: Style{color: "red", width: "100px"}}, Transition{attr: Attributes{lang: "de", title: "Bar"}, delay: 30, duration: 15, selector: [#bar, #foo], style: Style{color: "rgb(123, 234, 56)", width: "120px"}}]')
+        })
+    })
+
+    describe('.size()', () => {
+        it('should return the size of the collection', () => {
+            assert.equal(TransitionCollection().size(), 0)
+
+            assert.equal(TransitionCollection([{
+                attr: {
+                    title: 'Foo',
+                    lang: 'en'
+                },
+                style: {
+                    width: '100px',
+                    color: 'red'
+                },
+                delay: 20,
+                duration: 10,
+                selector: ['.foo', '.bar']
+            }, {
+                style: {
+                    width: '120px',
+                    color: 'rgb(123, 234, 56)'
+                },
+                delay: 30,
+                duration: 15,
+                attr: {
+                    title: 'Bar',
+                    lang: 'de'
+                },
+                selector: ['#foo', '#bar']
+            }]).size(), 2)
+        })
+    })
+
+    return
     describe('.getAttributes()', () => {
         it('should return empty object for empty entries', () => {
             assert.deepEqual(TransitionCollection([]).getAttributes(), {})

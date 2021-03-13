@@ -1,19 +1,24 @@
-import { Transition } from './transition'
+import { TRANSITION_TYPES } from './transition'
 import TransitionCollection from "./transition-collection";
 
-const TRANSITION_TYPES = {
-    enter: 'enter',
-    update: 'update',
-    exit: 'exit'
-}
 
-export default function Frame (frame) {
+/**
+ * Factory representing a single frame. The frame contains transition collections for each transition type.
+ *
+ * @function Frame
+ * @param {Object} config Frame configuration. May have properties enter, exit or update.
+ * @param {number} index Frame index.
+ */
+export default function Frame (config, index) {
     const _ = {
-        enter: frame.enter || [],
-        exit: frame.exit || [],
-        update: frame.update || []
+        index,
+        name: config.name,
+        enter: TransitionCollection(config.enter, TRANSITION_TYPES.enter),
+        update: TransitionCollection(config.update, TRANSITION_TYPES.update),
+        exit: TransitionCollection(config.exit, TRANSITION_TYPES.exit)
     }
 
+    /*
     function getUpdates (selector) {
         // TODO Return TransitionCollection
         return _.update.map(Transition)
@@ -34,17 +39,40 @@ export default function Frame (frame) {
             .filter(d => d.includes(selector))
             .map(d => d.GET())
     }
+     */
 
     const api = {}
 
-    /* test-code */
-    api.__test__ = {
-        getUpdates,
-        getEnters,
-        getExits
-    }
-    /* end-test-code */
+    /**
+     * Returns the string representation of the frame.
+     *
+     * @method toString
+     * @memberOf Frame
+     * @return {string} String representation of the frame.
+     */
+    api.toString = () => {
+        const entries = [`index: ${_.index}`]
 
+        if (typeof _.name !== 'undefined') {
+            entries.push(`name: "${_.name}"`)
+        }
+
+        if (_.enter.size() > 0) {
+            entries.push(`enter: ${_.enter.toString()}`)
+        }
+
+        if (_.update.size() > 0) {
+            entries.push(`update: ${_.update.toString()}`)
+        }
+
+        if (_.exit.size() > 0) {
+            entries.push(`exit: ${_.exit.toString()}`)
+        }
+
+        return `Frame{${entries.join(', ')}}`
+    }
+
+    /*
     api.getRelevantEntries = selector => {
         // Priority of transitions: enter, update, exit.
 
@@ -69,6 +97,7 @@ export default function Frame (frame) {
         // Otherwise return empty transition collection.
         return TransitionCollection()
     }
+     */
 
     return api
 }

@@ -1,18 +1,21 @@
-import { event, select, text } from 'd3'
 import jsyaml from 'js-yaml'
-import SceneObject from './scene-object'
+import FrameCollection from "./frame-collection";
 
 // TODO Add callback option when frame is changed.
 // TODO Instead of a single transition, add support to a sequence of style/attr transitions.
-
 // TODO Lump transitions with same delay and duration together.
+// TODO Add TOC by specifying slides with titles.
+// TODO Convert transitions to async methods.
+// TODO Implement save to PDF in browser.
 export default function Scene (selector) {
+    // Constants
     const CLASSES = {
-        object: 'mo'
+        object: 'm'
     }
 
-    let _ = {
-        frames: [],
+    // Private members.
+    const _ = {
+        frames: FrameCollection(),
 
         // Current frame.
         current: 0,
@@ -21,6 +24,7 @@ export default function Scene (selector) {
         objects: []
     }
 
+    /*
     // TODO Move this to transition.
     function parseTransitions (transitionCollection) {
         return Object.entries(transitionCollection || [])
@@ -33,15 +37,51 @@ export default function Scene (selector) {
         _.objects.forEach(obj => obj.toFrame(_.current, frame))
         _.current = frame
     }
+     */
 
+    // Public methods.
     const api = {}
 
+    /**
+     * Returns the string representation of the scene.
+     *
+     * @method toString
+     * @memberOf Scene
+     * @return {string} String representation of the scene.
+     */
     /* test-code */
-    api.__test__ = {
-        _
+    api.toString = () => {
+        return 'Scene{'
+            // TODO Add more when frames are added.
+            + `frames: ${_.frames.toString()}, `
+            + `current: ${_.current}, `
+            // TODO Add more when objects are added.
+            + `objects: []`
+            + '}'
     }
     /* end-test-code */
 
+    api.init = async transitions => {
+        // Load transitions from the YAML file.
+        const text = await fetch(transitions)
+            .then(response => response.text())
+        const frames = jsyaml.load(text)
+
+        // Build frames.
+        _.frames = FrameCollection(frames)
+        //_.frames = FrameCollection(frames)
+            // Map selectors to actions.
+            /*.map(([name, frame]) => ({
+                name,
+                enter: parseTransitions(frame.enter),
+                update: parseTransitions(frame.update),
+                exit: parseTransitions(frame.exit)
+            }))
+             */
+        return api
+    }
+
+    /*
     api.forward = () => {
         if (_.frames.length > _.current) {
             jump(_.current + 1)
@@ -114,6 +154,7 @@ export default function Scene (selector) {
         })
         return api
     }
+     */
 
     return api
 }

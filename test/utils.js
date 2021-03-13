@@ -1,15 +1,8 @@
-import { assert } from 'chai'
-import { JSDOM } from 'jsdom'
-import { describe, it, beforeEach } from 'mocha'
+import { assert } from 'chai'
+import { describe, it } from 'mocha'
 import extractSelectors from '../src/utils/extract-selectors'
 import compile from '../src/utils/compile'
-
-
-beforeEach(() => {
-    const dom = new JSDOM('<html><body></body></html>')
-    global.window = dom.window
-    global.document = dom.window.document
-})
+import './test-utils'
 
 
 describe('utils', () => {

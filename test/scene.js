@@ -1,85 +1,11 @@
-import { readFileSync } from 'fs'
-import { assert } from 'chai'
-import { JSDOM } from 'jsdom'
-import { describe, it, beforeEach } from 'mocha'
-import SceneObject from '../src/scene-object'
+import { assert } from 'chai'
+import { describe, it } from 'mocha'
 import Scene from '../src/scene'
-import * as d3 from 'd3'
+import { FRAMES_PATH, addObjects } from './test-utils';
+import jsyaml from 'js-yaml';
 
-/*
-const FRAMES = [{
-    id: 1,
-    update: [{
-        selector: ['.mo'],
-        style: {
-            color: 'rgb(255, 0, 0)'
-        },
-        attr: {
-            title: 'Frame 1'
-        }
-    }]
-}, {
-    id: 2,
-    exit: [{
-        selector: ['.foo'],
-        style: {
-            color: 'rgb(255, 255, 0)'
-        },
-        attr: {
-            title: 'Exited'
-        }
-    }]
-}, {
-    id: 3,
-    enter: [{
-        selector: ['.bar'],
-        style: {
-            color: 'rgb(0, 255, 0)'
-        },
-        attr: {
-            title: 'Entered'
-        }
-    }]
-}]
- */
+
 const FRAMES = './test/test_data/test_scene.yml'
-
-function addObjects () {
-    [{
-        classList: ['foo'],
-        style: {
-            color: 'rgb(0, 0, 0)'
-        },
-        attr: {
-            title: 'First object'
-        }
-    }, {
-        classList: ['bar'],
-        style: {
-            'background-color': 'orange',
-            display: 'none'
-        },
-        attr: {
-            title: 'Second object'
-        }
-    }].forEach((d, i) => {
-        const el = d3.select('body').append('div')
-            .attr('id', 'mo-' + (i + 1))
-            .attr('class', 'mo ' + d.classList.join(' '))
-
-        for (const key in d.style) {
-            if (d.style.hasOwnProperty(key)) {
-                el.style(key, d.style[key])
-            }
-        }
-
-        for (const key in d.attr) {
-            if (d.attr.hasOwnProperty(key)) {
-                el.attr(key, d.attr[key])
-            }
-        }
-    })
-}
 
 function assert_frame_0 (scene) {
     return new Promise(resolve => {
@@ -155,39 +81,36 @@ function assert_frame_3 (scene) {
     })
 }
 
-beforeEach(() => {
-    // Create DOM.
-    const dom = new JSDOM('<html><body></body></html>')
-    global.window = dom.window
-    global.document = dom.window.document
-
-    // Mock fetch method that just reads a local file.
-    global.fetch = function (url) {
-        return new Promise(resolve => {
-            resolve({
-                ok: true,
-                text () {
-                    readFileSync(url, {encoding: 'utf8'})
-                }
-            })
-        })
-    }
-})
-
 describe('Scene', () => {
+    describe('.toString()', () => {
+        it('should return the string representation', () => {
+            assert.equal(Scene().toString(), 'Scene{frames: FrameCollection[], current: 0, objects: []}')
+        })
+    })
+
+    describe('.init()', () => {
+        it('should build scene', async () => {
+            addObjects()
+            const scene = await Scene().init(FRAMES_PATH)
+            assert.equal(scene.toString(),'Scene{frames: FrameCollection[Frame{index: 0, name: "first", update: TransitionCollection[Transition{duration: 10, selector: [#obj-1], style: Style{color: "rgb(255, 0, 0)"}}]}, Frame{index: 1, exit: TransitionCollection[Transition{delay: 10, selector: [.foo], style: Style{background-color: "rgb(0, 0, 255)"}}, Transition{delay: 20, selector: [.bar], style: Style{color: "rgb(0, 0, 255)"}}]}, Frame{index: 2, enter: TransitionCollection[Transition{attr: Attributes{title: "Changed"}, selector: [.el], style: Style{color: "rgb(0, 255, 0)"}}]}, Frame{index: 3, name: "fourth", enter: TransitionCollection[Transition{selector: [#obj-2]}]}], current: 0, objects: []}')
+        })
+    })
+
+    return
     describe('.init()', () => {
         it('should build scene', async () => {
             addObjects()
 
             // Build objects separate.
-            const objects = [
-                SceneObject(document.getElementById('mo-1')).init(FRAMES),
-                SceneObject(document.getElementById('mo-2')).init(FRAMES)
-            ]
+            /*const objects = [
+                SceneObject(document.getElementById('mo-1')).init(frames),
+                SceneObject(document.getElementById('mo-2')).init(frames)
+            ]*/
 
             // Build scene.
             const scene = await Scene('body')
                 .init(FRAMES)
+            console.log(scene.__test__._.frames)
 
             assert.deepEqual(scene.__test__._.current, 0)
             assert.deepEqual(
@@ -197,6 +120,7 @@ describe('Scene', () => {
             return assert_frame_0(scene)
         })
     })
+    return
 
     describe('.jumpTo()', () => {
         it('should do nothing if jumping to the same frame', async () => {

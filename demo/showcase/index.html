@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="js/lib/d3.6.2.0.min.js"></script>
-    <script src="js/lib/js-yaml.3.14.1.min.js"></script>
-    <script src="js/lib/mostrar.min.js"></script>
-    <script src="js/frames.js"></script>
-    <title>demo</title>
+    <script src="../lib/d3.5.16.0.min.js"></script>
+    <script src="../lib/js-yaml.3.14.1.min.js"></script>
+    <script src="../../dist/mostrar.min.js"></script>
+    <title>showcase | demo</title>
     <style>
         html, body {
             margin: 0;
@@ -137,7 +136,7 @@
         const scene = await mostrar.Scene('#cards-container')
             .init('frames.yml')
         setInterval(() => {
-            if (i < Frames.length) {
+            if (i < 10) {
                 scene.forward()
                 i++
             } else {

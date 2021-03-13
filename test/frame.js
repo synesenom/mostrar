@@ -1,8 +1,43 @@
-import { assert } from 'chai'
+import { assert } from 'chai'
 import { describe, it } from 'mocha'
 import Frame from '../src/frame'
 
 describe('Frame', () => {
+    describe('.toString()', () => {
+        it('should return the string representation', () => {
+            assert.equal(Frame({name: 'Foo'}, 0).toString(), 'Frame{index: 0, name: "Foo"}')
+
+            assert.equal(Frame({
+                enter: [{
+                    attr: {
+                        title: 'Foo',
+                        lang: 'en'
+                    },
+                    style: {
+                        width: '100px',
+                        color: 'red'
+                    },
+                    delay: 20,
+                    duration: 10,
+                    selector: ['.foo', '.bar']
+                }, {
+                    style: {
+                        width: '120px',
+                        color: 'rgb(123, 234, 56)'
+                    },
+                    delay: 30,
+                    duration: 15,
+                    attr: {
+                        title: 'Bar',
+                        lang: 'de'
+                    },
+                    selector: ['#foo', '#bar']
+                }]
+            }, 3).toString(), 'Frame{index: 3, enter: TransitionCollection[Transition{attr: Attributes{lang: "en", title: "Foo"}, delay: 20, duration: 10, selector: [.bar, .foo], style: Style{color: "red", width: "100px"}}, Transition{attr: Attributes{lang: "de", title: "Bar"}, delay: 30, duration: 15, selector: [#bar, #foo], style: Style{color: "rgb(123, 234, 56)", width: "120px"}}]}')
+        })
+    })
+
+    return
     describe('.getEnters()', () => {
         it('should return empty array for invalid enter', () => {
             assert.deepEqual(Frame({}).__test__.getEnters(['.foo', '#bar']), [])

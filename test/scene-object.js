@@ -1,64 +1,19 @@
-import { assert } from 'chai'
-import { JSDOM } from 'jsdom'
+import { assert } from 'chai'
 import { describe, it, beforeEach } from 'mocha'
-import State from '../src/state'
+import ElementState from '../src/element-state'
 import SceneObject from '../src/scene-object'
-import * as d3 from 'd3'
+import { addObjects } from './test-utils';
 
-const FRAMES = [{
-    id: 1,
-    update: [{
-        selector: ['#obj-1'],
-        duration: 10,
-        style: {
-            color: 'rgb(255, 0, 0)'
-        }
-    }]
-}, {
-    id: 2,
-    exit: [{
-        selector: ['.foo'],
-        delay: 10,
-        style: {
-            'background-color': 'rgb(0, 0, 255)'
-        }
-    }]
-}, {
-    id: 3,
-    enter: [{
-        selector: ['.bar'],
-        attr: {
-            title: 'Changed'
-        }
-    }]
-}, {
-    id: 4,
-    enter: [{
-        selector: ['#obj-2']
-    }]
-}]
-
-function addObjects () {
-    [{
-        classList: ['foo', 'bar']
-    }].forEach((d, i) => {
-        const el = document.createElement('div')
-        el.id = 'obj-' + (i + 1)
-        el.classList.add('obj', ...d.classList)
-        el.style.backgroundColor = 'orange'
-        el.title = 'First object'
-        document.body.appendChild(el)
-    })
-}
-
-beforeEach(() => {
-    // Create DOM.
-    const dom = new JSDOM('<html><body></body></html>')
-    global.window = dom.window
-    global.document = dom.window.document
-})
 
 describe('SceneObject', () => {
+    describe('.toString()', () => {
+        it('should return the string representation', () => {
+            addObjects()
+            assert.equal(SceneObject(document.getElementById('obj-1')).toString(), 'SceneObject{ tagName: div, selectors: { #obj-1, .el, .foo, .m }, states: [] }')
+        })
+    })
+
+    return
     describe('.init()', () => {
         it ('should return the SceneObject API', () => {
             addObjects()
@@ -100,7 +55,7 @@ describe('SceneObject', () => {
                 delay: 0,
                 style: {'background-color': 'rgb(0, 0, 255)', color: 'rgb(255, 0, 0)'},
                 attr: {title: 'Changed'}
-            }].map(d => State(d).__test__.toString()))
+            }].map(d => ElementState(d).__test__.toString()))
         })
     })
 
