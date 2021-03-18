@@ -49,14 +49,10 @@ export default function SceneObject (node) {
                     [d]: _.selection.attr(d) || null
                 }), {}),
         })
-        /*{
-            visible: _.selection.style('display') !== 'none',
-            style: Style(
-
-            ),
-            attr: Attributes()
-        }*/
         _.states.push(state)
+
+        // Go through the frames and build state history.
+        frameCollection.filter(_.selectors)
 
         return api
     }

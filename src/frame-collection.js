@@ -44,6 +44,8 @@ export default function FrameCollection (frames = []) {
         .flat()
         .sort()
 
+    api.filter = selectors => _.frames.filter(d => d.filter(selectors))
+
     /*
     api.getTransitions = () => TransitionCollection(
         frames.map(d => d.update)

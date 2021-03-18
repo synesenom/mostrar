@@ -95,6 +95,10 @@ export default function Frame (config, index) {
         ..._.exit.collectStyleNames(selectors)
     ].sort()
 
+    api.filter = selectors => {
+        
+    }
+
     /*
     api.getRelevantEntries = selector => {
         // Priority of transitions: enter, update, exit.

@@ -58,6 +58,16 @@ export default function TransitionCollection (options = [], type) {
         .flat()
         .sort()
 
+    /**
+     * Returns transitions that are relevant to a set of selectors.
+     *
+     * @method filter
+     * @memberOf TransitionCollection
+     * @param {string[]} selectors Array of selectors to return transitions for.
+     * @return {Transition[]} Array of transitions.
+     */
+    api.filter = selectors => _.transitions.filter(d => d.include(selectors))
+
     /*
     api.getType = () => type
 
